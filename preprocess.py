@@ -60,8 +60,13 @@ with open("kakaotalk_jisoo.txt", 'r', encoding='UTF-8') as f:
     for index, line in enumerate(lines):
 
         name, msg = preprocess_sent(line)
-
+        
         if name == None:
+            continue
+        
+        msg = cleanMessage(msg).strip()
+
+        if msg == "":
             continue
 
         # if conversation just started and speaker is me, then simply pass
@@ -71,20 +76,20 @@ with open("kakaotalk_jisoo.txt", 'r', encoding='UTF-8') as f:
         # if conversation just started and speaker is my friend, start collecting data
         elif not speaker and name == friend:
             speaker = name
-            msgs += cleanMessage(msg).strip()
+            msgs += msg
         elif speaker:
             # conversation started
 
             # if speaker has not changed
             # keep adding sentences
             if speaker == name:
-                msgs += (" " + cleanMessage(msg).strip())
+                msgs += (" " + msg)
 
             # if speaker has changed
             # append msgs to msg_log and speaker changes
             else:
                 msg_log.append(msgs)
-                msgs = cleanMessage(msg).strip()
+                msgs = msg
                 speaker = name
 
 # append last chat
@@ -94,19 +99,18 @@ msg_log.append(msgs)
 source_iter = (msg.strip() for index, msg in enumerate(msg_log) if index % 2 == 0)
 target_iter = (msg.strip() for index, msg in enumerate(msg_log) if index % 2 == 1)
 
-print(msg_log)
 
 # save source_iter to source.txt
-with open('source.txt', 'w') as f:
+with open('source_test.txt', 'w') as f:
     for msg in source_iter:
-        if msg == "":
-            pass
-        else:
-            f.write(msg + "\n")
+    #     if msg == "":
+    #         pass
+    #     else:
+        f.write(msg + "\n")
 
-with open('target.txt', 'w') as f:
+with open('target_test.txt', 'w') as f:
     for msg in target_iter:
-        if msg == "":
-            pass
-        else:
-            f.write(msg + "\n")
+    #     if msg == "":
+    #         pass
+    #     else:
+        f.write(msg + "\n")
